@@ -47,6 +47,7 @@ public class WorkerMain extends UnicastRemoteObject implements Worker, Runnable{
 		String line;
 		
 		System.out.println("Running in workerMain!");
+		System.out.println("Print \"quit\" to quit!");
 		BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
 		
 		while(running) {

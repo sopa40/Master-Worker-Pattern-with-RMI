@@ -36,6 +36,7 @@ public class MasterServer extends UnicastRemoteObject implements Master, Server{
 		// TODO Auto-generated constructor stub
 		
 		System.out.println("MasterServer inits!");
+		System.out.println("***Print 'q' to quit and 's' to check out the number of workers!***");
 		registry = LocateRegistry.createRegistry(port);
 		registry.rebind(NAME_STRING, this);
 		
@@ -83,12 +84,19 @@ public class MasterServer extends UnicastRemoteObject implements Master, Server{
 			throws RemoteException {
 		// TODO Auto-generated method stub
 
-		// create 2 pools 
+		// Create 2 pools 
 		PoolMain<Argument> argPool = new PoolMain<Argument>();
 		PoolMain<Result> resPool = new PoolMain<Result>();
 		
+		// Job splitted
 		j.split(argPool, workers.size());
 		System.out.println("doJob() is invoked with " + workers.size() + " workers!");
+		
+		// Worker starts
+		for(Worker w: workers) {
+			w.start(j.getTask(), argPool, resPool);
+		}
+		System.out.println("Work distributed!");
 		
 		new Thread(new Runnable() {
 			
@@ -97,17 +105,17 @@ public class MasterServer extends UnicastRemoteObject implements Master, Server{
 				// TODO Auto-generated method stub
 				try {
 					while(argPool.size() > 0) {
-						Thread.sleep(10);
+						Thread.sleep(1);
 					}
 					System.out.println("Server: Merging...");
 					j.merge(resPool);
 				} catch (InterruptedException | RemoteException e) {
 					// TODO: handle exception
-
 				}
 			}
 		}).start();
 		
+		// Return future object
 		return j.getFuture();
 	}
 
