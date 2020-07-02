@@ -15,7 +15,7 @@ public class ClientMath {
 	}
 
 	public void execute() throws RemoteException {
-		Integer[] numbers = {1, 2, 3, 4, 5};
+		Integer[] numbers = {1, 2, 3, 4, 5, 6, 7, 1000, 10000, 100000, 10000};
 		Job<Integer, Integer, Integer> job = new JobMath(numbers);
 
 		RemoteFuture<Integer> remoteFuture = clientserver.doJob(job);
